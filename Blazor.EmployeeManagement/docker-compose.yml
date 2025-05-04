@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: galaktika_employee_management_web
+    ports:
+      - "5112:5112"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=master;Initial Catalog=Galaktika.Systems;User Id=sa;Password=YourStrong@Passw0rd;Encrypt=False
+      - ASPNETCORE_URLS=http://+:5112
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: galaktika_employee_management_db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+volumes:
+  sql_data:
